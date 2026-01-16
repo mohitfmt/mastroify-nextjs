@@ -1,12 +1,7 @@
 import Image from "next/image";
-import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Youtube,
-  Mail,
-  Phone,
-} from "lucide-react";
+import Link from "next/link";
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FiMail, FiPhone } from "react-icons/fi";
 
 export default function Footer() {
   return (
@@ -36,7 +31,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gold-primary transition-colors"
               >
-                <Facebook className="w-5 h-5" />
+                <FaFacebook className="w-5 h-5" />
               </a>
               <a
                 href="https://twitter.com/mastroify"
@@ -44,7 +39,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gold-primary transition-colors"
               >
-                <Twitter className="w-5 h-5" />
+                <FaTwitter className="w-5 h-5" />
               </a>
               <a
                 href="https://www.instagram.com/mastroify/"
@@ -52,7 +47,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gold-primary transition-colors"
               >
-                <Instagram className="w-5 h-5" />
+                <FaInstagram className="w-5 h-5" />
               </a>
               <a
                 href="https://www.youtube.com/@mastroify"
@@ -60,7 +55,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gold-primary transition-colors"
               >
-                <Youtube className="w-5 h-5" />
+                <FaYoutube className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -70,36 +65,36 @@ export default function Footer() {
             <h3 className="text-gold-primary font-bold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/about"
                   className="text-gray-400 hover:text-gold-primary transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/services"
                   className="text-gray-400 hover:text-gold-primary transition-colors"
                 >
                   Services
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/book"
                   className="text-gray-400 hover:text-gold-primary transition-colors"
                 >
                   Book Consultation
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/blog"
                   className="text-gray-400 hover:text-gold-primary transition-colors"
                 >
                   Blog
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -109,11 +104,11 @@ export default function Footer() {
             <h3 className="text-gold-primary font-bold mb-4">Contact</h3>
             <ul className="space-y-2">
               <li className="flex items-center gap-2 text-gray-400">
-                <Phone className="w-4 h-4" />
+                <FiPhone className="w-4 h-4" />
                 <span>+60 18 355 3290</span>
               </li>
               <li className="flex items-center gap-2 text-gray-400">
-                <Mail className="w-4 h-4" />
+                <FiMail className="w-4 h-4" />
                 <span>info@mastroify.com</span>
               </li>
             </ul>
@@ -126,24 +121,24 @@ export default function Footer() {
             © {new Date().getFullYear()} Mastroify. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
-            <a
-              href="#"
+            <Link
+              href="/privacy"
               className="text-gray-500 hover:text-gold-primary transition-colors"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/terms"
               className="text-gray-500 hover:text-gold-primary transition-colors"
             >
               Terms & Conditions
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/disclaimer"
               className="text-gray-500 hover:text-gold-primary transition-colors"
             >
               Disclaimer
-            </a>
+            </Link>
           </div>
         </div>
       </div>

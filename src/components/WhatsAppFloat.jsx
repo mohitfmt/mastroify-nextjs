@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
 
 export default function WhatsAppFloat() {
@@ -17,7 +17,7 @@ export default function WhatsAppFloat() {
       className="floating-whatsapp"
       aria-label="Contact via WhatsApp"
     >
-      <MessageCircle className="w-8 h-8" />
+      <FaWhatsapp className="w-8 h-8" />
     </Link>
   );
 }

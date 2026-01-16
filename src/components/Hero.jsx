@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Sparkles, Calendar, Star } from "lucide-react";
+import { FiStar, FiCalendar } from "react-icons/fi";
+import { HiSparkles } from "react-icons/hi2";
 
 export default function Hero() {
   const [stars, setStars] = useState([]);
@@ -96,15 +97,15 @@ export default function Hero() {
           className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-12 px-4"
         >
           <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-deep-space/50 border border-gold-primary/30 rounded-full text-xs sm:text-sm">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-gold-primary" />
+            <HiSparkles className="w-3 h-3 sm:w-4 sm:h-4 text-gold-primary" />
             <span>Expert Analysis</span>
           </div>
           <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-deep-space/50 border border-gold-primary/30 rounded-full text-xs sm:text-sm">
-            <Star className="w-3 h-3 sm:w-4 sm:h-4 text-gold-primary" />
+            <FiStar className="w-3 h-3 sm:w-4 sm:h-4 text-gold-primary" />
             <span>Personalized Reports</span>
           </div>
           <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-deep-space/50 border border-gold-primary/30 rounded-full text-xs sm:text-sm">
-            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-gold-primary" />
+            <FiCalendar className="w-3 h-3 sm:w-4 sm:h-4 text-gold-primary" />
             <span>Delivered in 3-5 Days</span>
           </div>
         </motion.div>
@@ -137,7 +138,7 @@ export default function Hero() {
           </div>
           <div className="hidden sm:block w-px h-4 bg-gray-700" />
           <div className="flex items-center gap-2">
-            <Star className="w-4 h-4 text-gold-primary fill-gold-primary" />
+            <FiStar className="w-4 h-4 text-gold-primary fill-gold-primary" />
             <span>82+ consultations delivered</span>
           </div>
         </motion.div>

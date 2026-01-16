@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Star } from "lucide-react";
+import { FiStar } from "react-icons/fi";
 
 const testimonials = [
   {
@@ -62,9 +62,10 @@ export default function Testimonials() {
               {/* Stars */}
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star
+                  <FiStar
                     key={i}
-                    className="w-5 h-5 text-gold-primary fill-gold-primary"
+                    className="w-5 h-5 text-gold-primary"
+                    fill="currentColor"
                   />
                 ))}
               </div>

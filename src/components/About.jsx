@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { BookOpen, Award, Users, Heart } from "lucide-react";
+import { FiBookOpen, FiAward, FiUsers, FiHeart } from "react-icons/fi";
 
 export default function About() {
   const ref = useRef(null);
@@ -54,7 +54,7 @@ export default function About() {
             className="card-cosmic p-6 text-center group"
           >
             <div className="w-16 h-16 mx-auto mb-4 bg-gradient-cosmic rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <BookOpen className="w-8 h-8 text-white" />
+              <FiBookOpen className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-gold-primary mb-2">
               Expert Analysis
@@ -74,7 +74,7 @@ export default function About() {
             className="card-cosmic p-6 text-center group"
           >
             <div className="w-16 h-16 mx-auto mb-4 bg-gradient-cosmic rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <Award className="w-8 h-8 text-white" />
+              <FiAward className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-gold-primary mb-2">
               Quality Over Speed
@@ -94,7 +94,7 @@ export default function About() {
             className="card-cosmic p-6 text-center group"
           >
             <div className="w-16 h-16 mx-auto mb-4 bg-gradient-cosmic rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <Users className="w-8 h-8 text-white" />
+              <FiUsers className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-gold-primary mb-2">
               Bilingual Service
@@ -114,7 +114,7 @@ export default function About() {
             className="card-cosmic p-6 text-center group"
           >
             <div className="w-16 h-16 mx-auto mb-4 bg-gradient-cosmic rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <Heart className="w-8 h-8 text-white" />
+              <FiHeart className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-gold-primary mb-2">
               Ethical Practice

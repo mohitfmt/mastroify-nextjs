@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Menu, X, ChevronDown } from "lucide-react";
+import Link from "next/link";
+import { FiMenu, FiX, FiChevronDown } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navigation() {
@@ -19,11 +20,14 @@ export default function Navigation() {
   }, []);
 
   const services = [
-    "Birth Chart Reading",
-    "Vastu Consultation",
-    "Remedies & Solutions",
-    "Career Guidance",
-    "Relationship Compatibility",
+    { name: "Birth Chart Reading", href: "/services/birth-chart-reading" },
+    { name: "Vastu Consultation", href: "/services/vastu-consultation" },
+    { name: "Remedies & Solutions", href: "/services/remedies-solutions" },
+    { name: "Career Guidance", href: "/services/career-guidance" },
+    {
+      name: "Relationship Compatibility",
+      href: "/services/relationship-compatibility",
+    },
   ];
 
   return (
@@ -37,7 +41,7 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <div className="shrink-0">
+          <Link href="/" className="shrink-0">
             <Image
               src="/logo.svg"
               alt="Mastroify"
@@ -45,22 +49,28 @@ export default function Navigation() {
               height={60}
               className="cursor-pointer"
             />
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="text-gray-300 hover:text-gold-primary transition-colors"
             >
               Home
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/panchang"
+              className="text-gray-300 hover:text-gold-primary transition-colors"
+            >
+              Panchang
+            </Link>
+            <Link
               href="#about"
               className="text-gray-300 hover:text-gold-primary transition-colors"
             >
               About
-            </a>
+            </Link>
 
             {/* Services Dropdown */}
             <div
@@ -70,7 +80,7 @@ export default function Navigation() {
             >
               <button className="flex items-center gap-1 text-gray-300 hover:text-gold-primary transition-colors">
                 Services
-                <ChevronDown className="w-4 h-4" />
+                <FiChevronDown className="w-4 h-4" />
               </button>
 
               <AnimatePresence>
@@ -82,29 +92,29 @@ export default function Navigation() {
                     className="absolute top-full left-0 mt-2 w-64 bg-deep-space border border-gold-primary/20 rounded-lg shadow-xl overflow-hidden"
                   >
                     {services.map((service) => (
-                      <a
-                        key={service}
-                        href="#"
+                      <Link
+                        key={service.name}
+                        href={service.href}
                         className="block px-4 py-3 text-gray-300 hover:bg-gold-primary/10 hover:text-gold-primary transition-colors border-b border-gray-800 last:border-b-0"
                       >
-                        {service}
-                      </a>
+                        {service.name}
+                      </Link>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            <a
+            <Link
               href="#contact"
               className="text-gray-300 hover:text-gold-primary transition-colors"
             >
               Contact
-            </a>
+            </Link>
 
-            <button className="btn-primary py-2! px-6! text-sm">
+            <Link href="/book" className="btn-primary py-2! px-6! text-sm">
               Book Consultation
-            </button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,7 +122,11 @@ export default function Navigation() {
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden text-gold-primary"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? (
+              <FiX className="w-6 h-6" />
+            ) : (
+              <FiMenu className="w-6 h-6" />
+            )}
           </button>
         </div>
       </div>
@@ -127,18 +141,24 @@ export default function Navigation() {
             className="md:hidden bg-deep-space border-t border-gold-primary/20"
           >
             <div className="px-4 py-4 space-y-4">
-              <a
-                href="#"
+              <Link
+                href="/"
                 className="block text-gray-300 hover:text-gold-primary transition-colors"
               >
                 Home
-              </a>
-              <a
+              </Link>
+              <Link
+                href="/panchang"
+                className="text-gray-300 hover:text-gold-primary transition-colors"
+              >
+                Panchang
+              </Link>
+              <Link
                 href="#about"
                 className="block text-gray-300 hover:text-gold-primary transition-colors"
               >
                 About
-              </a>
+              </Link>
 
               <div>
                 <button
@@ -146,7 +166,7 @@ export default function Navigation() {
                   className="flex items-center justify-between w-full text-gray-300 hover:text-gold-primary transition-colors"
                 >
                   Services
-                  <ChevronDown
+                  <FiChevronDown
                     className={`w-4 h-4 transition-transform ${
                       servicesOpen ? "rotate-180" : ""
                     }`}
@@ -156,28 +176,28 @@ export default function Navigation() {
                 {servicesOpen && (
                   <div className="mt-2 ml-4 space-y-2">
                     {services.map((service) => (
-                      <a
-                        key={service}
-                        href="#"
+                      <Link
+                        key={service.name}
+                        href={service.href}
                         className="block text-sm text-gray-400 hover:text-gold-primary transition-colors"
                       >
-                        {service}
-                      </a>
+                        {service.name}
+                      </Link>
                     ))}
                   </div>
                 )}
               </div>
 
-              <a
+              <Link
                 href="#contact"
                 className="block text-gray-300 hover:text-gold-primary transition-colors"
               >
                 Contact
-              </a>
+              </Link>
 
-              <button className="btn-primary w-full py-2! text-sm">
+              <Link href="/book" className="btn-primary w-full py-2! text-sm">
                 Book Consultation
-              </button>
+              </Link>
             </div>
           </motion.div>
         )}

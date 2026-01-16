@@ -2,11 +2,18 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { Star, Home, Heart, Briefcase, Sparkles, BookOpen } from "lucide-react";
+import {
+  FiStar,
+  FiHome,
+  FiHeart,
+  FiBriefcase,
+  FiBookOpen,
+} from "react-icons/fi";
+import { HiSparkles } from "react-icons/hi2";
 
 const services = [
   {
-    icon: Star,
+    icon: FiStar,
     title: "Birth Chart Reading",
     description:
       "Comprehensive Kundali analysis covering all 12 houses, planetary positions, Dashas, and yogas.",
@@ -17,7 +24,7 @@ const services = [
     ],
   },
   {
-    icon: Home,
+    icon: FiHome,
     title: "Vastu Consultation",
     description:
       "Traditional Vastu Shastra guidance for homes, offices, and commercial spaces.",
@@ -28,7 +35,7 @@ const services = [
     ],
   },
   {
-    icon: Sparkles,
+    icon: HiSparkles,
     title: "Remedies & Solutions",
     description:
       "Personalized gemstone recommendations, mantras, and practical remedies.",
@@ -39,7 +46,7 @@ const services = [
     ],
   },
   {
-    icon: Briefcase,
+    icon: FiBriefcase,
     title: "Career Guidance",
     description:
       "Detailed career analysis examining 10th house, D-10 chart, and timing for job changes.",
@@ -50,7 +57,7 @@ const services = [
     ],
   },
   {
-    icon: Heart,
+    icon: FiHeart,
     title: "Relationship Compatibility",
     description:
       "Kundali matching and relationship analysis using Ashtakoota Guna Milan.",
@@ -61,7 +68,7 @@ const services = [
     ],
   },
   {
-    icon: BookOpen,
+    icon: FiBookOpen,
     title: "Educational Approach",
     description:
       "Reports explain astrological concepts in simple language - learn as you discover.",
