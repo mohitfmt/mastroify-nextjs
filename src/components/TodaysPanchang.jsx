@@ -9,10 +9,10 @@ import {
   FiClock,
   FiStar,
   FiAlertTriangle,
-  FiChevronDown,
-  FiChevronUp,
+  FiChevronRight,
 } from "react-icons/fi";
 import { HiSparkles } from "react-icons/hi2";
+import Link from "next/link";
 
 export default function TodaysPanchang() {
   const ref = useRef(null);
@@ -20,11 +20,9 @@ export default function TodaysPanchang() {
 
   const [panchang, setPanchang] = useState(null);
   const [location, setLocation] = useState(null);
-  const [coords, setCoords] = useState({ lat: 28.6139, lon: 77.209 }); // Default: Delhi
+  const [coords, setCoords] = useState({ lat: 28.6139, lon: 77.209 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showAdvanced, setShowAdvanced] = useState(false);
-  const [locationSearch, setLocationSearch] = useState("");
 
   // Fetch Panchang data
   const fetchPanchang = async (lat, lon) => {
@@ -41,18 +39,16 @@ export default function TodaysPanchang() {
     }
   };
 
-  // Get user location
+  // Get user location on mount
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
           setCoords({ lat: latitude, lon: longitude });
-
-          // Fetch Panchang data
           fetchPanchang(latitude, longitude);
 
-          // Reverse geocode using Nominatim (free)
+          // Reverse geocode
           fetch(
             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           )
@@ -70,52 +66,23 @@ export default function TodaysPanchang() {
             .catch(() => setLocation({ city: "Your Location", country: "" }));
         },
         () => {
-          // User denied location - use default Delhi
           fetchPanchang(28.6139, 77.209);
           setLocation({ city: "New Delhi", country: "India" });
         }
       );
     } else {
-      // Geolocation not supported - use default
       fetchPanchang(28.6139, 77.209);
       setLocation({ city: "New Delhi", country: "India" });
     }
   }, []);
 
-  // Search location (Nominatim)
-  const handleLocationSearch = async (query) => {
-    if (query.length < 3) return;
-
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          query
-        )}&limit=1`
-      );
-      const results = await response.json();
-
-      if (results.length > 0) {
-        const { lat, lon, display_name } = results[0];
-        setCoords({ lat: parseFloat(lat), lon: parseFloat(lon) });
-        setLocation({
-          city: display_name.split(",")[0],
-          country: display_name.split(",").pop().trim(),
-        });
-        fetchPanchang(parseFloat(lat), parseFloat(lon));
-        setLocationSearch("");
-      }
-    } catch (err) {
-      console.error("Location search failed:", err);
-    }
-  };
-
-  // Format time to local
+  // Format time helper
   const formatTime = (dateString) => {
     if (!dateString) return "--:--";
     return format(new Date(dateString), "h:mm a");
   };
 
-  // Check if time is next day
+  // Check if next day
   const isNextDay = (dateString) => {
     if (!dateString) return false;
     const date = new Date(dateString);
@@ -129,6 +96,7 @@ export default function TodaysPanchang() {
       <section
         ref={ref}
         className="py-20 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-night-sky to-deep-space"
+        id="panchang"
       >
         <div className="max-w-7xl mx-auto text-center">
           <div className="animate-pulse space-y-4">
@@ -151,6 +119,7 @@ export default function TodaysPanchang() {
       <section
         ref={ref}
         className="py-20 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-night-sky to-deep-space"
+        id="panchang"
       >
         <div className="max-w-7xl mx-auto text-center">
           <FiAlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
@@ -166,32 +135,34 @@ export default function TodaysPanchang() {
     );
   }
 
+  if (!panchang) return null;
+
   const sunMoonData = [
     {
       icon: WiSunrise,
       label: "Sunrise",
-      time: panchang?.sunMoon?.sunrise,
+      time: panchang.sunMoon.sunrise,
       color: "text-dawn-gold",
     },
     {
       icon: WiSunset,
       label: "Sunset",
-      time: panchang?.sunMoon?.sunset,
+      time: panchang.sunMoon.sunset,
       color: "text-celestial-pink",
     },
     {
       icon: WiMoonrise,
       label: "Moonrise",
-      time: panchang?.sunMoon?.moonrise,
+      time: panchang.sunMoon.moonrise,
       color: "text-gold-light",
-      nextDay: isNextDay(panchang?.sunMoon?.moonrise),
+      nextDay: isNextDay(panchang.sunMoon.moonrise),
     },
     {
       icon: WiMoonset,
       label: "Moonset",
-      time: panchang?.sunMoon?.moonset,
+      time: panchang.sunMoon.moonset,
       color: "text-cosmic-purple",
-      nextDay: isNextDay(panchang?.sunMoon?.moonset),
+      nextDay: isNextDay(panchang.sunMoon.moonset),
     },
   ];
 
@@ -220,45 +191,21 @@ export default function TodaysPanchang() {
             Align your day with cosmic rhythms and auspicious timings
           </p>
 
-          {/* Location & Date with Search */}
-          <div className="flex flex-col items-center justify-center gap-4 mt-6">
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              {/* Location Display */}
-              <div className="flex items-center gap-2 text-gray-400">
-                <FiMapPin className="w-4 h-4 text-gold-primary shrink-0" />
-                <span className="font-medium">
-                  {location?.city}
-                  {location?.country && `, ${location.country}`}
-                </span>
-              </div>
-
-              <div className="hidden sm:block w-px h-4 bg-gray-700" />
-
-              {/* Date Display */}
-              <div className="flex items-center gap-2 text-gray-400">
-                <FiClock className="w-4 h-4 text-gold-primary shrink-0" />
-                <span>{format(new Date(), "EEEE, MMMM d, yyyy")}</span>
-              </div>
+          {/* Location & Date */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+            <div className="flex items-center gap-2 text-gray-400">
+              <FiMapPin className="w-4 h-4 text-gold-primary shrink-0" />
+              <span className="font-medium">
+                {location?.city}
+                {location?.country && `, ${location.country}`}
+              </span>
             </div>
 
-            {/* Location Search */}
-            <div className="flex gap-2 w-full max-w-md">
-              <input
-                type="text"
-                placeholder="Search city... (e.g., Mumbai, London)"
-                value={locationSearch}
-                onChange={(e) => setLocationSearch(e.target.value)}
-                onKeyPress={(e) =>
-                  e.key === "Enter" && handleLocationSearch(locationSearch)
-                }
-                className="flex-1 px-4 py-2 bg-deep-space border border-gold-primary/30 rounded-lg text-gray-300 placeholder-gray-600 focus:outline-none focus:border-gold-primary"
-              />
-              <button
-                onClick={() => handleLocationSearch(locationSearch)}
-                className="btn-secondary py-2 px-4 text-sm whitespace-nowrap"
-              >
-                Search
-              </button>
+            <div className="hidden sm:block w-px h-4 bg-gray-700" />
+
+            <div className="flex items-center gap-2 text-gray-400">
+              <FiClock className="w-4 h-4 text-gold-primary shrink-0" />
+              <span>{format(new Date(), "EEEE, MMMM d, yyyy")}</span>
             </div>
           </div>
         </motion.div>
@@ -320,29 +267,28 @@ export default function TodaysPanchang() {
                       Tithi (Lunar Day)
                     </div>
                     <div className="text-2xl font-bold text-gold-primary mt-1">
-                      {panchang?.tithi?.name}
+                      {panchang.tithi.name}
                     </div>
                   </div>
                   <div className="text-xs bg-gold-primary/20 text-gold-primary px-2 py-1 rounded-full">
-                    {panchang?.tithi?.paksha}
+                    {panchang.tithi.paksha}
                   </div>
                 </div>
 
-                {/* Fixed Progress Bar */}
                 <div className="mt-4 bg-deep-space/80 rounded-full h-2 overflow-hidden w-full">
                   <div
                     className="h-full bg-linear-to-r from-cosmic-purple via-celestial-pink to-gold-primary rounded-full transition-all duration-1000 ease-out"
                     style={{
                       width: `${Math.min(
-                        Math.max(parseFloat(panchang?.tithi?.progress || 0), 0),
+                        Math.max(parseFloat(panchang.tithi.progress || 0), 0),
                         100
                       )}%`,
                     }}
                   />
                 </div>
                 <div className="flex justify-between text-xs text-gray-500 mt-2">
-                  <span>{panchang?.tithi?.progress}% complete</span>
-                  <span>Ends: {formatTime(panchang?.tithi?.endsAt)}</span>
+                  <span>{panchang.tithi.progress}% complete</span>
+                  <span>Ends: {formatTime(panchang.tithi.endsAt)}</span>
                 </div>
               </div>
 
@@ -350,25 +296,25 @@ export default function TodaysPanchang() {
               <div className="card-cosmic p-6 bg-linear-to-br from-celestial-pink/20 to-deep-space">
                 <div className="text-sm text-gray-500">Nakshatra</div>
                 <div className="text-2xl font-bold text-gold-primary mt-1">
-                  {panchang?.nakshatra?.name}
+                  {panchang.nakshatra.name}
                 </div>
                 <div className="text-sm text-gray-400 mt-3 space-y-1">
                   <div>
                     Lord:{" "}
                     <span className="text-gold-light">
-                      {panchang?.nakshatra?.lord}
+                      {panchang.nakshatra.lord}
                     </span>
                   </div>
                   <div>
                     Deity:{" "}
                     <span className="text-gray-300">
-                      {panchang?.nakshatra?.deity}
+                      {panchang.nakshatra.deity}
                     </span>
                   </div>
                   <div>
                     Ends:{" "}
                     <span className="text-gray-300">
-                      {formatTime(panchang?.nakshatra?.endsAt)}
+                      {formatTime(panchang.nakshatra.endsAt)}
                     </span>
                   </div>
                 </div>
@@ -380,20 +326,22 @@ export default function TodaysPanchang() {
               <div className="card-cosmic p-4">
                 <div className="text-xs text-gray-500 mb-1">Yoga</div>
                 <div className="text-xl font-bold text-gold-primary">
-                  {panchang?.yoga?.name}
+                  {panchang.yoga.name}
                 </div>
                 <div className="text-xs text-gray-500 mt-2">
-                  Ends: {formatTime(panchang?.yoga?.endsAt)}
+                  Ends: {formatTime(panchang.yoga.endsAt)}
                 </div>
               </div>
               <div className="card-cosmic p-4">
-                <div className="text-xs text-gray-500 mb-1">Karana</div>
-                <div className="text-xl font-bold text-gold-primary">
-                  {panchang?.karana?.name}
-                </div>
-                <div className="text-xs text-gray-500 mt-2">
-                  Ends: {formatTime(panchang?.karana?.endsAt)}
-                </div>
+                <div className="text-xs text-gray-500 mb-1">Karanas</div>
+                {panchang.karanas.map((karana, idx) => (
+                  <div
+                    key={idx}
+                    className="text-base font-bold text-gold-primary"
+                  >
+                    {karana.name}
+                  </div>
+                ))}
               </div>
             </div>
           </motion.div>
@@ -417,11 +365,8 @@ export default function TodaysPanchang() {
                     Abhijit Muhurta
                   </div>
                   <div className="text-xl font-bold text-green-300 mt-2">
-                    {formatTime(
-                      panchang?.auspiciousTimes?.abhijitMuhurta?.start
-                    )}{" "}
-                    -{" "}
-                    {formatTime(panchang?.auspiciousTimes?.abhijitMuhurta?.end)}
+                    {formatTime(panchang.auspiciousTimes.abhijitMuhurta.start)}{" "}
+                    - {formatTime(panchang.auspiciousTimes.abhijitMuhurta.end)}
                   </div>
                   <div className="text-xs text-gray-400 mt-2">
                     Perfect for new beginnings
@@ -448,8 +393,8 @@ export default function TodaysPanchang() {
                     Rahu Kaal
                   </div>
                   <div className="text-base font-bold text-gray-200">
-                    {formatTime(panchang?.inauspiciousTimes?.rahuKaal?.start)} -{" "}
-                    {formatTime(panchang?.inauspiciousTimes?.rahuKaal?.end)}
+                    {formatTime(panchang.inauspiciousTimes.rahuKaal.start)} -{" "}
+                    {formatTime(panchang.inauspiciousTimes.rahuKaal.end)}
                   </div>
                 </div>
 
@@ -459,8 +404,8 @@ export default function TodaysPanchang() {
                     Gulika Kaal
                   </div>
                   <div className="text-base font-bold text-gray-200">
-                    {formatTime(panchang?.inauspiciousTimes?.gulikaKaal?.start)}{" "}
-                    - {formatTime(panchang?.inauspiciousTimes?.gulikaKaal?.end)}
+                    {formatTime(panchang.inauspiciousTimes.gulikaKaal.start)} -{" "}
+                    {formatTime(panchang.inauspiciousTimes.gulikaKaal.end)}
                   </div>
                 </div>
 
@@ -470,130 +415,34 @@ export default function TodaysPanchang() {
                     Yama Ghanta
                   </div>
                   <div className="text-base font-bold text-gray-200">
-                    {formatTime(panchang?.inauspiciousTimes?.yamaGhanta?.start)}{" "}
-                    - {formatTime(panchang?.inauspiciousTimes?.yamaGhanta?.end)}
+                    {formatTime(panchang.inauspiciousTimes.yamaGhanta.start)} -{" "}
+                    {formatTime(panchang.inauspiciousTimes.yamaGhanta.end)}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Additional Info */}
+            {/* Day Summary */}
             <div className="card-cosmic p-6 bg-linear-to-br from-gold-primary/10 to-deep-space">
               <h4 className="text-sm font-semibold text-gold-primary mb-3">
-                Additional Details
+                Day Summary
               </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Moon Rashi:</span>
-                  <span className="text-gray-200 font-medium">
-                    {panchang?.rashis?.moon?.name}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Sun Rashi:</span>
-                  <span className="text-gray-200 font-medium">
-                    {panchang?.rashis?.sun?.name}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Vikram Samvat:</span>
-                  <span className="text-gray-200 font-medium">
-                    {panchang?.samvats?.vikramSamvat}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Shaka Samvat:</span>
-                  <span className="text-gray-200 font-medium">
-                    {panchang?.samvats?.shakaSamvat}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Month (Amanta):</span>
-                  <span className="text-gray-200 font-medium">
-                    {panchang?.months?.amanta}
-                  </span>
-                </div>
+              <div className="inline-block px-4 py-2 bg-gradient-cosmic rounded-full text-base font-bold mb-3">
+                {panchang.summary.dayType} Day
+              </div>
+              <div className="text-xs text-gray-400 space-y-2">
+                {panchang.summary.goodFor.length > 0 && (
+                  <div>
+                    <div className="text-green-400 font-semibold">
+                      Good for:
+                    </div>
+                    <div>{panchang.summary.goodFor.slice(0, 2).join(", ")}</div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>
         </div>
-
-        {/* Advanced Timings (Collapsible) */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-8"
-        >
-          <button
-            onClick={() => setShowAdvanced(!showAdvanced)}
-            className="w-full card-cosmic p-4 flex items-center justify-between hover:border-gold-primary/50 transition-colors"
-          >
-            <span className="text-lg font-semibold text-gold-primary">
-              Advanced Timings
-            </span>
-            {showAdvanced ? (
-              <FiChevronUp className="w-5 h-5" />
-            ) : (
-              <FiChevronDown className="w-5 h-5" />
-            )}
-          </button>
-
-          {showAdvanced && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              className="card-cosmic p-6 mt-4"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Dur Muhurtam */}
-                <div>
-                  <h4 className="text-sm font-semibold text-red-400 mb-3">
-                    Dur Muhurtam
-                  </h4>
-                  <div className="space-y-2">
-                    {panchang?.inauspiciousTimes?.durMuhurtam?.map((dm, i) => (
-                      <div key={i} className="text-sm text-gray-300">
-                        {formatTime(dm.start)} - {formatTime(dm.end)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Varjyam */}
-                <div>
-                  <h4 className="text-sm font-semibold text-red-400 mb-3">
-                    Varjyam
-                  </h4>
-                  <div className="space-y-2">
-                    {panchang?.inauspiciousTimes?.varjyam?.map((v, i) => (
-                      <div key={i} className="text-sm text-gray-300">
-                        {formatTime(v.start)} - {formatTime(v.end)}{" "}
-                        {isNextDay(v.start) && "(Next Day)"}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Amrit Kaal */}
-                <div>
-                  <h4 className="text-sm font-semibold text-green-400 mb-3">
-                    Amrit Kaal
-                  </h4>
-                  <div className="text-sm text-gray-300">
-                    {formatTime(panchang?.auspiciousTimes?.amritKaal?.start)} -{" "}
-                    {formatTime(panchang?.auspiciousTimes?.amritKaal?.end)}
-                    {isNextDay(panchang?.auspiciousTimes?.amritKaal?.start) &&
-                      " (Next Day)"}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    Good for remedies
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </motion.div>
 
         {/* CTA */}
         <motion.div
@@ -602,11 +451,15 @@ export default function TodaysPanchang() {
           transition={{ duration: 0.6, delay: 1 }}
           className="text-center mt-12"
         >
-          <button className="btn-secondary">
+          <Link
+            href="/panchang"
+            className="btn-secondary inline-flex items-center gap-2"
+          >
             View Complete Detailed Panchang
-          </button>
+            <FiChevronRight className="w-4 h-4" />
+          </Link>
           <p className="text-sm text-gray-500 mt-3">
-            Access full monthly calendar, festival dates, and planetary transits
+            Access full calendar, festival dates, and activity recommendations
           </p>
         </motion.div>
       </div>
